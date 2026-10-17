@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Workbench · 多模型工作台</title>
+    <link rel="stylesheet" href="/css/app.css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316161a'/%3E%3Cpath d='M8 21l5-10 3 6 2-3 2 7' stroke='%237c9cff' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <div class="brand-mark">AW</div>
+          <div class="brand-text">
+            <strong>AI Workbench</strong>
+            <span>多引擎统一工作台</span>
+          </div>
+        </div>
+
+        <button class="btn-new" id="btn-new">＋ 新建对话</button>
+
+        <div class="search">
+          <input id="search-input" type="search" placeholder="搜索对话  (Ctrl+K)" autocomplete="off" />
+        </div>
+
+        <nav class="conv-list" id="conv-list" aria-label="对话列表"></nav>
+
+        <div class="sidebar-foot">
+          <button class="foot-btn" id="btn-import" title="导入对话 / 自动同步">
+            <span class="ico">⇪</span> 导入
+          </button>
+          <button class="foot-btn" id="btn-apps" title="启动本地程序">
+            <span class="ico">▤</span> 本地程序
+          </button>
+          <button class="foot-btn" id="btn-settings" title="设置">
+            <span class="ico">⚙</span> 设置
+          </button>
+          <div class="sync-pill" id="sync-pill" title="点击切换自动同步">同步：—</div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <button class="icon-btn" id="btn-toggle-sidebar" title="收起/展开侧栏">☰</button>
+          <div class="chips" id="chips">
+            <button class="chip chip-engine" id="chip-engine"><span class="dot"></span><span class="chip-label">选择引擎</span></button>
+            <button class="chip" id="chip-model">模型：默认</button>
+            <button class="chip" id="chip-cwd" title="点击切换工作目录">目录</button>
+          </div>
+          <div class="top-actions">
+            <span class="run-status" id="run-status"></span>
+            <span class="sync-badge" id="sync-badge" title="自动同步状态">同步</span>
+            <button class="icon-btn" id="btn-refresh-engines" title="重新探测引擎">⟳</button>
+            <button class="icon-btn" id="btn-toggle-drawer" title="运行日志">▤</button>
+          </div>
+        </header>
+
+        <section class="messages" id="messages">
+          <div class="welcome" id="welcome"></div>
+        </section>
+
+        <footer class="composer">
+          <div class="composer-box">
+            <textarea id="input" rows="1" placeholder="给当前引擎发消息…  Enter 发送，Shift+Enter 换行" spellcheck="false"></textarea>
+            <div class="composer-bar">
+              <div class="composer-left">
+                <button class="mini-chip" id="composer-engine">引擎</button>
+                <button class="mini-chip" id="composer-model">模型</button>
+                <button class="mini-chip" id="composer-cwd" title="工作目录">目录</button>
+              </div>
+              <div class="composer-right">
+                <span class="hint" id="composer-hint"></span>
+                <button class="btn-send" id="btn-send">发送</button>
+                <button class="btn-stop" id="btn-stop" hidden>停止</button>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </main>
+
+      <aside class="drawer" id="drawer">
+        <div class="drawer-head">
+          <strong>运行日志</strong>
+          <div class="drawer-head-actions">
+            <button class="link-btn" id="btn-clear-log">清空</button>
+            <button class="icon-btn" id="btn-close-drawer">✕</button>
+          </div>
+        </div>
+        <div class="drawer-body" id="drawer-body">
+          <div class="log-empty">发送消息后，这里会显示命令行、原始事件和错误输出。</div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="modal-root" id="modal-root"></div>
+    <div class="toasts" id="toasts"></div>
+
+    <script type="module" src="/js/app.mjs"></script>
+  </body>
+</html>

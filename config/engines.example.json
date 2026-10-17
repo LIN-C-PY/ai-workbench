@@ -1,0 +1,397 @@
+{
+  "$readme": [
+    "所有引擎都在这里定义，改完保存后刷新页面即可生效（服务端按文件修改时间自动重载）。",
+    "kind=cli    : 命令行程序。entry 是脚本/可执行文件，baseArgs 是固定参数，promptMode 决定提示词走参数还是 stdin。",
+    "kind=openai : 任何 OpenAI 兼容的 HTTP 接口（本地或云端），apiKey 可在设置页填写。",
+    "kind=app    : 本地已安装的程序，只做「一键启动」，不参与对话。",
+    "可用占位符：{{prompt}} {{model}} {{cwd}} {{sessionId}}"
+  ],
+  "engines": [
+    {
+      "id": "codex",
+      "label": "Codex",
+      "kind": "cli",
+      "group": "本地 CLI",
+      "badge": "CX",
+      "accent": "#7c9cff",
+      "description": "OpenAI Codex 命令行智能体，能读写本地仓库、执行命令。",
+      "command": "codex",
+      "entry": "",
+      "baseArgs": [
+        "exec",
+        "--json",
+        "--skip-git-repo-check"
+      ],
+      "cwdFlag": [
+        "--cd",
+        "{{cwd}}"
+      ],
+      "modelFlag": [
+        "-m",
+        "{{model}}"
+      ],
+      "promptMode": "stdin",
+      "streamMode": "auto",
+      "models": [
+        "gpt-5-codex",
+        "gpt-5",
+        "gpt-5-mini"
+      ],
+      "modelsFrom": {
+        "type": "codexCatalog",
+        "path": "~/.codex/models.json",
+        "configPath": "~/.codex/config.toml"
+      },
+      "resumeArgs": [
+        "exec",
+        "resume",
+        "{{sessionId}}"
+      ],
+      "resumePromptMode": "stdin",
+      "historySource": "codex"
+    },
+    {
+      "id": "claude",
+      "label": "Claude Code",
+      "kind": "cli",
+      "group": "本地 CLI",
+      "badge": "CC",
+      "accent": "#e08b52",
+      "description": "Anthropic Claude Code，支持工具调用与多文件编辑。",
+      "command": "claude",
+      "entry": "",
+      "baseArgs": [
+        "--print",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--dangerously-skip-permissions"
+      ],
+      "modelFlag": [
+        "--model",
+        "{{model}}"
+      ],
+      "promptMode": "arg",
+      "streamMode": "auto",
+      "models": [
+        "claude-sonnet-4-5",
+        "claude-opus-4-1",
+        "claude-haiku-4-5"
+      ],
+      "modelsFrom": {
+        "type": "claudeEnv"
+      },
+      "settingsFile": "claude-settings.json",
+      "notes": "工作台会生成 data/claude-settings.json 并用 --settings 传给它：这样即使 ~/.claude/settings.json 里写着失效的 token，也能用工作台解析出来的正确配置。",
+      "resumeArgs": [
+        "--print",
+        "--output-format",
+        "stream-json",
+        "--verbose",
+        "--dangerously-skip-permissions",
+        "--resume",
+        "{{sessionId}}"
+      ],
+      "resumePromptMode": "arg",
+      "historySource": "claude",
+      "notes": "工作目录 = 进程 cwd。默认跳过权限确认，可在设置里关掉。"
+    },
+    {
+      "id": "qwen",
+      "label": "千问 Qwen Code",
+      "kind": "cli",
+      "group": "本地 CLI",
+      "badge": "QW",
+      "accent": "#4fb8a8",
+      "description": "通义千问 Qwen Code 命令行智能体。",
+      "command": "qwen",
+      "entry": "",
+      "baseArgs": [
+        "--output-format",
+        "stream-json"
+      ],
+      "modelFlag": [
+        "-m",
+        "{{model}}"
+      ],
+      "promptMode": "arg",
+      "streamMode": "auto",
+      "models": [
+        "qwen3-coder-plus",
+        "qwen3-max",
+        "qwen-plus"
+      ],
+      "resumeArgs": [
+        "--output-format",
+        "stream-json",
+        "--resume",
+        "{{sessionId}}"
+      ],
+      "resumePromptMode": "arg",
+      "historySource": "qwen"
+    },
+    {
+      "id": "deepseek-harness",
+      "label": "DeepSeek Harness",
+      "kind": "cli",
+      "group": "本地 CLI",
+      "badge": "DS",
+      "accent": "#5b8def",
+      "description": "dsh：按 profile 叠加插件层的 DeepSeek Harness。",
+      "command": "dsh",
+      "entry": "",
+      "baseArgs": [
+        "--profile",
+        "web"
+      ],
+      "models": [
+        "profile:web"
+      ],
+      "promptMode": "arg",
+      "streamMode": "text",
+      "historySource": "dsh",
+      "notes": "可选 profile 见 ~/.dsh/profiles。dsh 的参数形式若变化，改 baseArgs / promptMode 即可。"
+    },
+    {
+      "id": "workbuddy",
+      "label": "WorkBuddy / CodeBuddy",
+      "kind": "cli",
+      "group": "本地 CLI",
+      "badge": "WB",
+      "accent": "#2f9cf4",
+      "description": "腾讯 CodeBuddy Code（WorkBuddy 桌面版内置的 CLI）。",
+      "command": "node",
+      "entry": "%LOCALAPPDATA%\\Programs\\WorkBuddy\\resources\\app.asar.unpacked\\cli\\bin\\codebuddy",
+      "baseArgs": [
+        "--print",
+        "--output-format",
+        "stream-json",
+        "--permission-mode",
+        "bypassPermissions"
+      ],
+      "modelFlag": [
+        "--model",
+        "{{model}}"
+      ],
+      "promptMode": "arg",
+      "streamMode": "auto",
+      "models": [
+        "auto",
+        "claude-sonnet-4-5",
+        "gpt-5",
+        "deepseek-v3"
+      ],
+      "resumeArgs": [
+        "--print",
+        "--output-format",
+        "stream-json",
+        "--resume",
+        "{{sessionId}}"
+      ],
+      "resumePromptMode": "arg",
+      "historySource": "codebuddy"
+    },
+    {
+      "id": "ollama",
+      "label": "Ollama 本地模型",
+      "kind": "openai",
+      "group": "本地模型",
+      "badge": "OL",
+      "accent": "#a1a1aa",
+      "description": "本机 Ollama 服务，模型列表实时读取。",
+      "baseUrl": "http://127.0.0.1:11434/v1",
+      "apiKey": "ollama",
+      "modelsEndpoint": "http://127.0.0.1:11434/api/tags",
+      "modelsPath": "models",
+      "modelsNameKey": "name",
+      "models": [
+        "qwen3:14b",
+        "qwen2.5:7b-instruct-q4_K_M"
+      ],
+      "supportsCustomModel": true,
+      "extraBody": {
+        "keep_alive": "30m"
+      }
+    },
+    {
+      "id": "deepseek",
+      "label": "DeepSeek 官方 API",
+      "kind": "openai",
+      "group": "云端 API",
+      "badge": "DK",
+      "accent": "#4d6bfe",
+      "baseUrl": "https://api.deepseek.com/v1",
+      "apiKeyEnv": "DEEPSEEK_API_KEY",
+      "models": [
+        "deepseek-flash",
+        "deepseek-v4-pro",
+        "deepseek-chat",
+        "deepseek-reasoner"
+      ],
+      "notes": "模型列表会实时向接口要；上面几个是拿不到网络时的兜底，你账号里现在有 deepseek-flash 和 deepseek-v4-pro。",
+      "supportsCustomModel": true
+    },
+    {
+      "id": "kimi",
+      "label": "Kimi (Moonshot)",
+      "kind": "openai",
+      "group": "云端 API",
+      "badge": "KM",
+      "accent": "#31c48d",
+      "baseUrl": "https://api.moonshot.cn/v1",
+      "apiKeyEnv": "MOONSHOT_API_KEY",
+      "models": [
+        "kimi-k2-0905-preview",
+        "moonshot-v1-32k",
+        "moonshot-v1-128k"
+      ],
+      "supportsCustomModel": true
+    },
+    {
+      "id": "qwen-api",
+      "label": "通义千问 API",
+      "kind": "openai",
+      "group": "云端 API",
+      "badge": "TY",
+      "accent": "#7b61ff",
+      "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "apiKeyEnv": "DASHSCOPE_API_KEY",
+      "models": [
+        "qwen3-max",
+        "qwen-plus",
+        "qwen-turbo",
+        "qwen3-coder-plus"
+      ],
+      "supportsCustomModel": true
+    },
+    {
+      "id": "doubao",
+      "label": "豆包 API（火山方舟）",
+      "kind": "openai",
+      "group": "云端 API",
+      "badge": "DB",
+      "accent": "#ff5c5c",
+      "description": "走官方接口，需要在「设置 → API Key」里填火山方舟的 Key。没有 Key 的话用下面的「豆包 桌面版」。",
+      "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+      "apiKeyEnv": "ARK_API_KEY",
+      "models": [
+        "doubao-1-5-pro-32k-250115",
+        "doubao-1-5-lite-32k-250115"
+      ],
+      "supportsCustomModel": true
+    },
+    {
+      "id": "doubao-desktop",
+      "label": "豆包 桌面版（客户端）",
+      "kind": "desktop",
+      "group": "桌面客户端",
+      "badge": "DB",
+      "accent": "#ff5c5c",
+      "description": "直接调用本机装的豆包客户端：自动打开窗口、把消息粘进去并发送。不需要 API Key。",
+      "command": "%LOCALAPPDATA%\\Doubao\\Application\\app\\launcher\\Doubao.exe",
+      "notes": "回复不会自动回到工作台，拿到答案后点对话里的「把回复贴回来」补上。"
+    },
+    {
+      "id": "custom-openai",
+      "label": "自定义 OpenAI 兼容",
+      "kind": "openai",
+      "group": "云端 API",
+      "badge": "AI",
+      "accent": "#94a3b8",
+      "baseUrl": "",
+      "models": [],
+      "supportsCustomModel": true,
+      "notes": "在设置里填 baseUrl / apiKey / 模型名，可接任何 OpenAI 兼容服务（vLLM、LM Studio、one-api…）。"
+    },
+    {
+      "id": "ollama-app",
+      "label": "Ollama 桌面程序",
+      "kind": "app",
+      "group": "本地程序",
+      "badge": "OL",
+      "accent": "#a1a1aa",
+      "command": "%LOCALAPPDATA%\\Programs\\Ollama\\ollama app.exe"
+    },
+    {
+      "id": "doubao-app",
+      "label": "豆包 桌面版",
+      "kind": "app",
+      "group": "本地程序",
+      "badge": "DB",
+      "accent": "#ff5c5c",
+      "command": "%LOCALAPPDATA%\\Doubao\\Application\\app\\launcher\\Doubao.exe"
+    },
+    {
+      "id": "claude-app",
+      "label": "Claude 桌面版",
+      "kind": "app",
+      "group": "本地程序",
+      "badge": "CC",
+      "accent": "#e08b52",
+      "command": "%LOCALAPPDATA%\\AnthropicClaude\\claude.exe"
+    },
+    {
+      "id": "workbuddy-app",
+      "label": "WorkBuddy 桌面版",
+      "kind": "app",
+      "group": "本地程序",
+      "badge": "WB",
+      "accent": "#2f9cf4",
+      "command": "%LOCALAPPDATA%\\Programs\\WorkBuddy\\WorkBuddy.exe"
+    }
+  ],
+  "historySources": [
+    {
+      "id": "codex",
+      "label": "Codex",
+      "kind": "codex",
+      "path": "~/.codex/sessions",
+      "titleIndex": {
+        "path": "~/.codex/session_index.jsonl",
+        "idField": "id",
+        "nameField": "thread_name"
+      },
+      "autoSync": true
+    },
+    {
+      "id": "codex-archive",
+      "label": "Codex 桌面版（归档）",
+      "kind": "codex",
+      "path": "~/.codex/archived_sessions",
+      "titleIndex": {
+        "path": "~/.codex/session_index.jsonl",
+        "idField": "id",
+        "nameField": "thread_name"
+      },
+      "autoSync": true
+    },
+    {
+      "id": "claude",
+      "label": "Claude Code",
+      "kind": "claude",
+      "path": "~/.claude/projects",
+      "autoSync": true
+    },
+    {
+      "id": "qwen",
+      "label": "Qwen Code",
+      "kind": "qwen",
+      "path": "~/.qwen/projects",
+      "autoSync": false
+    },
+    {
+      "id": "codebuddy",
+      "label": "CodeBuddy / WorkBuddy",
+      "kind": "codebuddy",
+      "path": "~/.codebuddy/projects",
+      "autoSync": false
+    },
+    {
+      "id": "dsh",
+      "label": "DeepSeek Harness",
+      "kind": "dsh",
+      "path": "~/.dsh/sessions",
+      "autoSync": true
+    }
+  ]
+}

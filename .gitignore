@@ -1,0 +1,16 @@
+# 运行时数据（对话、日志、密钥、回收站、字体…）——绝对不要提交
+data/
+
+# 个人配置：由 engines.example.json 生成，含本机路径
+config/engines.json
+config/engines.json.bak-*
+
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# 本地草稿
+*.local.json
+.env
+.env.*

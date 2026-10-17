@@ -1,0 +1,17 @@
+{
+  "name": "ai-workbench",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "多引擎 AI 工作台：在一个界面里操作 Codex / Claude Code / 千问 / DeepSeek Harness / CodeBuddy(WorkBuddy) / Kimi / 豆包 / Ollama 本地模型 与本地 exe 程序",
+  "main": "server/index.mjs",
+  "scripts": {
+    "start": "node server/index.mjs",
+    "dev": "node --watch server/index.mjs",
+    "mock": "node tools/mock-engine.mjs",
+    "selftest": "node tools/selftest.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
